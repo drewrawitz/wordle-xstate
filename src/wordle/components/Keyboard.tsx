@@ -49,7 +49,7 @@ const Key: React.FC<KeyProps> = ({ label }) => {
         [`Keyboard-key--${status}`]: status !== "unplayed",
       })}
     >
-      {letter}
+      {letter.toUpperCase()}
     </button>
   );
 };
