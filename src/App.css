@@ -1,3 +1,9 @@
+:root {
+  --correct: #538d4e;
+  --almost: #b59f3b;
+  --nope: #3a3a3c;
+}
+
 .App {
   text-align: center;
 }
@@ -58,14 +64,17 @@
   justify-content: center;
 }
 
+.Row-tile--correct,
 .Keyboard-key--correct {
-  background-color: #538d4e;
+  background-color: var(--correct);
 }
 
+.Row-tile--almost,
 .Keyboard-key--almost {
-  background-color: #b59f3b;
+  background-color: var(--almost);
 }
 
+.Row-tile--nope,
 .Keyboard-key--nope {
-  background-color: #3a3a3c;
+  background-color: var(--nope);
 }
