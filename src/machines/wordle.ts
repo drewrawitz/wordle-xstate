@@ -14,7 +14,7 @@ const wordleMachine = createMachine<WordleContext>({
   context: {
     guess: "",
     answer: "HALEY",
-    guesses: ["CREST", "HOAEY"],
+    guesses: ["CREST"],
   },
   states: {
     guessing: {

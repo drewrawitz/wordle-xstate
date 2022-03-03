@@ -1,12 +1,10 @@
 import React from "react";
-import { wordleMachine } from "../machines/wordle";
 import { letterStatus } from "../utils/wordle";
-import { useMachine } from "@xstate/react";
 import classnames from "classnames";
+import useWordle from "../hooks/useWordle";
 
 interface KeyProps {
   label: string;
-  status: string;
 }
 
 const getKeyLabel = (label: string) => {
@@ -20,30 +18,35 @@ const getKeyLabel = (label: string) => {
   }
 };
 
-const Key: React.FC<KeyProps> = ({ label, status }) => {
+const Key: React.FC<KeyProps> = ({ label }) => {
+  const { state, send } = useWordle();
+
   const letter = getKeyLabel(label);
+  const { guesses, answer } = state.context;
+  const status = letterStatus(letter, answer, guesses);
+
+  const onClick = (letter: string) => {
+    send({
+      type: "guess.key",
+      key: letter.toUpperCase(),
+    });
+  };
 
   return (
-    <div
+    <button
+      type="button"
+      onClick={() => onClick(letter)}
       className={classnames("Keyboard-key", {
         [`Keyboard-key--${status}`]: status !== "unplayed",
       })}
     >
       {letter}
-    </div>
+    </button>
   );
 };
 
 export default function Keyboard() {
-  const [state] = useMachine(wordleMachine);
-  const { guesses, answer } = state.context;
-
-  const getLetterStatus = (letter: string, index?: number) =>
-    letterStatus(letter, answer, guesses, index);
-
-  const letterMap = (key: string) => (
-    <Key key={key} label={key} status={getLetterStatus(key)} />
-  );
+  const letterMap = (key: string) => <Key key={key} label={key} />;
 
   return (
     <div className="Keyboard-wrapper">

@@ -1,20 +1,29 @@
 import classnames from "classnames";
-import { wordleMachine } from "../machines/wordle";
-import { useMachine } from "@xstate/react";
 import { letterStatus } from "../utils/wordle";
+import useWordle from "../hooks/useWordle";
 
 interface RowsProps {
   guess?: string;
+  isCurrent: boolean;
+  currentGuess: string;
   answer: string;
 }
 
-const Rows: React.FC<RowsProps> = ({ guess, answer }) => {
+const Rows: React.FC<RowsProps> = ({
+  guess,
+  currentGuess,
+  isCurrent = false,
+  answer,
+}) => {
   const ROWS = 5;
   const rowKeys = Array(ROWS).keys();
-  const guessArray = guess?.split("") || [];
+  const rowGuess = isCurrent ? currentGuess : guess;
+  const guessArray = rowGuess?.split("") || [];
 
   const getLetterStatus = (letter: string, index?: number) =>
-    letter ? letterStatus(letter, answer, guessArray, index) : "unplayed";
+    letter && !isCurrent
+      ? letterStatus(letter, answer, guessArray, index)
+      : "unplayed";
 
   return (
     <div className="Row-wrapper">
@@ -40,17 +49,23 @@ const Rows: React.FC<RowsProps> = ({ guess, answer }) => {
 export default function Board() {
   const COLUMNS = 6;
   const columnKeys = Array(COLUMNS).keys();
-  const [state] = useMachine(wordleMachine);
-  const { guesses, answer } = state.context;
+  const { state } = useWordle();
+
+  const { guess, guesses, answer } = state.context;
 
   return (
     <div className="Board">
       {Array.from(columnKeys).map((i, idx) => {
-        const guess = guesses[idx];
+        const rowGuess = guesses[idx];
 
         return (
           <div key={i} className="Column">
-            <Rows guess={guess} answer={answer} />
+            <Rows
+              guess={rowGuess}
+              answer={answer}
+              currentGuess={guess}
+              isCurrent={idx === guesses.length}
+            />
           </div>
         );
       })}
