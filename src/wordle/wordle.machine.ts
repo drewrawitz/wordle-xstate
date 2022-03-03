@@ -6,6 +6,7 @@ export interface WordleContext {
   guess: string;
   answer: string;
   guesses: string[];
+  solvingRow: number | null;
 }
 
 const wordleMachine = createMachine<WordleContext>({
@@ -15,6 +16,7 @@ const wordleMachine = createMachine<WordleContext>({
     guess: "",
     answer: "HALEY",
     guesses: [],
+    solvingRow: null,
   },
   states: {
     guessing: {
@@ -44,8 +46,11 @@ const wordleMachine = createMachine<WordleContext>({
       },
     },
     revealing: {
+      entry: assign({
+        solvingRow: (ctx) => ctx.guesses.length,
+      }),
       after: {
-        0: [
+        2000: [
           {
             cond: (ctx) => ctx.guess === ctx.answer,
             target: "won",
@@ -54,7 +59,12 @@ const wordleMachine = createMachine<WordleContext>({
             cond: (ctx) => ctx.guesses.length === MAX_GUESSES,
             target: "lost",
           },
-          { target: "guessing" },
+          {
+            target: "guessing",
+            actions: assign({
+              solvingRow: (_) => null,
+            }),
+          },
         ],
       },
     },

@@ -43,6 +43,10 @@
   height: 60px;
 }
 
+.Row-wrapper--revealing .Row-tile {
+  animation: letterScale 0.4s linear;
+}
+
 .Keyboard-wrapper {
   flex-direction: column;
 }
@@ -78,4 +82,13 @@
 .Row-tile--nope,
 .Keyboard-key--nope {
   background-color: var(--nope);
+}
+
+@keyframes letterScale {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
 }

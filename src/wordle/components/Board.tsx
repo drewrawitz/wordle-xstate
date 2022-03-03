@@ -4,7 +4,9 @@ import { useWordle } from "../wordle.hooks";
 
 interface RowsProps {
   guess?: string;
-  isCurrent: boolean;
+  isCurrent?: boolean;
+  isSolving?: boolean;
+  isRevealing?: boolean;
   currentGuess: string;
   answer: string;
 }
@@ -12,6 +14,8 @@ interface RowsProps {
 const Rows: React.FC<RowsProps> = ({
   guess,
   currentGuess,
+  isRevealing = false,
+  isSolving = false,
   isCurrent = false,
   answer,
 }) => {
@@ -26,10 +30,14 @@ const Rows: React.FC<RowsProps> = ({
       : "unplayed";
 
   return (
-    <div className="Row-wrapper">
-      {Array.from(rowKeys).map((i, idx) => {
-        const letter = guessArray[idx] || "";
-        const status = getLetterStatus(letter, idx);
+    <div
+      className={classnames("Row-wrapper", {
+        "Row-wrapper--revealing": isRevealing && isSolving,
+      })}
+    >
+      {Array.from(rowKeys).map((i, rowIdx) => {
+        const letter = guessArray[rowIdx] || "";
+        const status = getLetterStatus(letter, rowIdx);
 
         return (
           <div
@@ -50,7 +58,7 @@ export default function Board() {
   const COLUMNS = 6;
   const columnKeys = Array(COLUMNS).keys();
   const { state } = useWordle();
-  const { guess, guesses, answer } = state.context;
+  const { guess, guesses, answer, solvingRow } = state.context;
 
   return (
     <div className="Board">
@@ -60,9 +68,11 @@ export default function Board() {
         return (
           <div key={i} className="Column">
             <Rows
+              isRevealing={state.value === "revealing"}
               guess={rowGuess}
               answer={answer}
               currentGuess={guess}
+              isSolving={idx + 1 === solvingRow}
               isCurrent={idx === guesses.length}
             />
           </div>
