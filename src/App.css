@@ -19,7 +19,8 @@
   justify-content: center;
 }
 
-.Row-wrapper > * {
+.Row-wrapper > *,
+.Keyboard-col > * {
   margin: 5px;
 }
 
@@ -34,4 +35,25 @@
   justify-content: center;
   width: 60px;
   height: 60px;
+}
+
+.Keyboard-wrapper {
+  flex-direction: column;
+}
+
+.Keyboard-wrapper,
+.Keyboard-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Keyboard-key {
+  font-weight: 700;
+  background-color: #818384;
+  padding: 20px 15px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
