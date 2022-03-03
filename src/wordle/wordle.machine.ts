@@ -1,6 +1,5 @@
 import { createMachine, assign } from "xstate";
-const WORD_LENGTH = 5;
-const MAX_GUESSES = 6;
+import { MAX_GUESSES, WORD_LENGTH } from "./wordle.config";
 
 export interface WordleContext {
   guess: string;
@@ -9,14 +8,18 @@ export interface WordleContext {
   solvingRow: number | null;
 }
 
+const DEFAULT_STATE = {
+  guess: "",
+  answer: "HALEY",
+  guesses: [],
+  solvingRow: null,
+};
+
 const wordleMachine = createMachine<WordleContext>({
   id: "wordle",
   initial: "guessing",
   context: {
-    guess: "",
-    answer: "HALEY",
-    guesses: [],
-    solvingRow: null,
+    ...DEFAULT_STATE,
   },
   states: {
     guessing: {
@@ -69,7 +72,16 @@ const wordleMachine = createMachine<WordleContext>({
       },
     },
     won: {},
-    lost: {},
+    lost: {
+      on: {
+        reset: {
+          actions: assign({
+            ...DEFAULT_STATE,
+          }),
+          target: "guessing",
+        },
+      },
+    },
   },
 });
 

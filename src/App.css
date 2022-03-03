@@ -49,6 +49,7 @@
 
 .Keyboard-wrapper {
   flex-direction: column;
+  margin-bottom: 25px;
 }
 
 .Keyboard-wrapper,
@@ -82,6 +83,11 @@
 .Row-tile--nope,
 .Keyboard-key--nope {
   background-color: var(--nope);
+}
+
+.Reset {
+  font-size: 16px;
+  cursor: pointer;
 }
 
 @keyframes letterScale {
