@@ -50,7 +50,7 @@ const wordleMachine = createMachine<WordleContext>({
         solvingRow: (ctx) => ctx.guesses.length,
       }),
       after: {
-        2000: [
+        400: [
           {
             cond: (ctx) => ctx.guess === ctx.answer,
             target: "won",

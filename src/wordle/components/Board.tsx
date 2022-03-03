@@ -1,25 +1,26 @@
 import classnames from "classnames";
 import { letterStatus } from "../wordle.utils";
 import { useWordle } from "../wordle.hooks";
+import type { WordleContext } from "../wordle.machine";
 
 interface RowsProps {
+  state: WordleContext;
   guess?: string;
   isCurrent?: boolean;
   isSolving?: boolean;
   isRevealing?: boolean;
-  currentGuess: string;
-  answer: string;
 }
 
 const Rows: React.FC<RowsProps> = ({
+  state,
   guess,
-  currentGuess,
   isRevealing = false,
   isSolving = false,
   isCurrent = false,
-  answer,
 }) => {
   const ROWS = 5;
+  const { answer } = state;
+  const currentGuess = state.guess;
   const rowKeys = Array(ROWS).keys();
   const rowGuess = isCurrent ? currentGuess : guess;
   const guessArray = rowGuess?.split("") || [];
@@ -58,7 +59,7 @@ export default function Board() {
   const COLUMNS = 6;
   const columnKeys = Array(COLUMNS).keys();
   const { state } = useWordle();
-  const { guess, guesses, answer, solvingRow } = state.context;
+  const { guesses, solvingRow } = state.context;
 
   return (
     <div className="Board">
@@ -69,9 +70,8 @@ export default function Board() {
           <div key={i} className="Column">
             <Rows
               isRevealing={state.value === "revealing"}
+              state={state.context}
               guess={rowGuess}
-              answer={answer}
-              currentGuess={guess}
               isSolving={idx + 1 === solvingRow}
               isCurrent={idx === guesses.length}
             />
