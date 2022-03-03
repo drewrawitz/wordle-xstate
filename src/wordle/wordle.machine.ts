@@ -14,7 +14,7 @@ const wordleMachine = createMachine<WordleContext>({
   context: {
     guess: "",
     answer: "HALEY",
-    guesses: ["CREST"],
+    guesses: [],
   },
   states: {
     guessing: {
@@ -36,7 +36,7 @@ const wordleMachine = createMachine<WordleContext>({
         "guess.submit": {
           cond: (ctx) => ctx.guess.length === WORD_LENGTH,
           actions: assign({
-            guess: (ctx) => "",
+            guess: (_) => "",
             guesses: (ctx) => ctx.guesses.concat(ctx.guess),
           }),
           target: "revealing",
