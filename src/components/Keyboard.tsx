@@ -24,19 +24,19 @@ export default function Keyboard() {
     <div className="Keyboard-wrapper">
       <div className="Keyboard-col">
         {"qwertyuiop".split("").map((key) => (
-          <Key label={key} />
+          <Key key={key} label={key} />
         ))}
       </div>
 
       <div className="Keyboard-col">
         {"asdfghjkl".split("").map((key) => (
-          <Key label={key} />
+          <Key key={key} label={key} />
         ))}
       </div>
 
       <div className="Keyboard-col">
         {"~zxcvbnm_".split("").map((key) => (
-          <Key label={key} />
+          <Key key={key} label={key} />
         ))}
       </div>
     </div>

@@ -1,13 +1,17 @@
 import "./App.css";
-import Board from "./components/Board";
-import Keyboard from "./components/Keyboard";
+import Wordle from "./components/Wordle";
+import { inspect } from "@xstate/inspect";
+
+inspect({
+  iframe: false,
+  url: "https://stately.ai/viz?inspect",
+});
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">Wordle</header>
-      <Board />
-      <Keyboard />
+      <Wordle />
     </div>
   );
 }
