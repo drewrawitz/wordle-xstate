@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { useInterpret } from "@xstate/react";
-import { wordleMachine } from "../machines/wordle";
+import { wordleMachine } from "../wordle/wordle.machine";
 import { InterpreterFrom } from "xstate";
 
 export const GlobalStateContext = createContext({

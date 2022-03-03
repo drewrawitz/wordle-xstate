@@ -1,5 +1,5 @@
 import "./App.css";
-import Wordle from "./components/Wordle";
+import Wordle from "./wordle/components/Wordle";
 import { GlobalStateProvider } from "./context/app.context";
 
 function App() {

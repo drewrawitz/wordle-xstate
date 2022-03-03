@@ -1,7 +1,10 @@
 import React from "react";
-import { letterStatus } from "../utils/wordle";
 import classnames from "classnames";
-import useWordle from "../hooks/useWordle";
+import { letterStatus } from "../wordle.utils";
+import { useWordle } from "../wordle.hooks";
+
+const KEY_ENTER = "~";
+const KEY_BACKSPACE = "_";
 
 interface KeyProps {
   label: string;
@@ -9,9 +12,9 @@ interface KeyProps {
 
 const getKeyLabel = (label: string) => {
   switch (label) {
-    case "~":
+    case KEY_ENTER:
       return "Enter";
-    case "_":
+    case KEY_BACKSPACE:
       return "(X)";
     default:
       return label;
@@ -26,16 +29,22 @@ const Key: React.FC<KeyProps> = ({ label }) => {
   const status = letterStatus(letter, answer, guesses);
 
   const onClick = (letter: string) => {
-    send({
-      type: "guess.key",
-      key: letter.toUpperCase(),
-    });
+    if (letter === KEY_BACKSPACE) {
+      send("guess.backspace");
+    } else if (letter === KEY_ENTER) {
+      send("guess.submit");
+    } else {
+      send({
+        type: "guess.key",
+        key: letter.toUpperCase(),
+      });
+    }
   };
 
   return (
     <button
       type="button"
-      onClick={() => onClick(letter)}
+      onClick={() => onClick(label)}
       className={classnames("Keyboard-key", {
         [`Keyboard-key--${status}`]: status !== "unplayed",
       })}

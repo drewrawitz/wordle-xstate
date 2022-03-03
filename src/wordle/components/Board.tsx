@@ -1,6 +1,6 @@
 import classnames from "classnames";
-import { letterStatus } from "../utils/wordle";
-import useWordle from "../hooks/useWordle";
+import { letterStatus } from "../wordle.utils";
+import { useWordle } from "../wordle.hooks";
 
 interface RowsProps {
   guess?: string;
@@ -50,7 +50,6 @@ export default function Board() {
   const COLUMNS = 6;
   const columnKeys = Array(COLUMNS).keys();
   const { state } = useWordle();
-
   const { guess, guesses, answer } = state.context;
 
   return (
