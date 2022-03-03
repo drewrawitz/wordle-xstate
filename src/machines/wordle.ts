@@ -1,23 +1,64 @@
 import { createMachine, assign } from "xstate";
+const WORD_LENGTH = 5;
+const MAX_GUESSES = 6;
 
-interface WordleContext {
-  count: number;
+export interface WordleContext {
+  guess: string;
+  answer: string;
+  guesses: string[];
 }
 
 const wordleMachine = createMachine<WordleContext>({
-  id: "toggle",
-  initial: "inactive",
+  id: "wordle",
+  initial: "guessing",
   context: {
-    count: 0,
+    guess: "",
+    answer: "HALEY",
+    guesses: ["CREST", "HOAEY"],
   },
   states: {
-    inactive: {
-      on: { TOGGLE: "active" },
+    guessing: {
+      entry: assign({ guess: "" }),
+      on: {
+        "guess.key": {
+          cond: (ctx, e) =>
+            ctx.guess.length < WORD_LENGTH && /^[a-zA-Z]$/.test(e.key),
+          actions: assign({
+            guess: (ctx, e) => ctx.guess + e.key.toUpperCase(),
+          }),
+        },
+        "guess.backspace": {
+          cond: (ctx) => ctx.guess.length > 0,
+          actions: assign({
+            guess: (ctx) => ctx.guess.slice(0, -1),
+          }),
+        },
+        "guess.submit": {
+          cond: (ctx) => ctx.guess.length === WORD_LENGTH,
+          actions: assign({
+            guesses: (ctx) => ctx.guesses.concat(ctx.guess),
+          }),
+          target: "revealing",
+        },
+      },
     },
-    active: {
-      entry: assign({ count: (ctx) => ctx.count + 1 }),
-      on: { TOGGLE: "inactive" },
+    revealing: {
+      after: {
+        2000: [
+          {
+            cond: (ctx) => ctx.guess === ctx.answer,
+            target: "won",
+          },
+          {
+            cond: (ctx) => ctx.guesses.length === MAX_GUESSES,
+            target: "lost",
+          },
+          { target: "guessing" },
+        ],
+      },
     },
+    won: {},
+    lost: {},
   },
 });
 
