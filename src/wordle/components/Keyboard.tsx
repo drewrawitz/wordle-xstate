@@ -3,42 +3,33 @@ import classnames from "classnames";
 import { letterStatus } from "../wordle.utils";
 import { useWordle } from "../wordle.hooks";
 
-const KEY_ENTER = "~";
-const KEY_BACKSPACE = "_";
-
 interface KeyProps {
   label: string;
+  value?: string;
 }
 
-const getKeyLabel = (label: string) => {
-  switch (label) {
-    case KEY_ENTER:
-      return "Enter";
-    case KEY_BACKSPACE:
-      return "(X)";
-    default:
-      return label;
+const sendKey = (code: string) => {
+  if (code === "Backspace") {
+    return "guess.backspace";
+  } else if (code === "Enter") {
+    return "guess.submit";
+  } else {
+    return {
+      type: "guess.key",
+      key: code.toUpperCase(),
+    };
   }
 };
 
-const Key: React.FC<KeyProps> = ({ label }) => {
+const Key: React.FC<KeyProps> = ({ label, value }) => {
   const { state, send } = useWordle();
-
-  const letter = getKeyLabel(label);
+  const letter = value || label;
   const { guesses, answer } = state.context;
   const status = letterStatus(letter, answer, guesses);
 
   const onClick = (letter: string) => {
-    if (letter === KEY_BACKSPACE) {
-      send("guess.backspace");
-    } else if (letter === KEY_ENTER) {
-      send("guess.submit");
-    } else {
-      send({
-        type: "guess.key",
-        key: letter.toUpperCase(),
-      });
-    }
+    const data = sendKey(letter);
+    send(data);
   };
 
   return (
@@ -60,16 +51,8 @@ export default function Keyboard() {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Backspace") {
-        send({ type: "guess.backspace" });
-      } else if (e.key === "Enter") {
-        send("guess.submit");
-      } else {
-        send({
-          type: "guess.key",
-          key: e.key.toUpperCase(),
-        });
-      }
+      const data = sendKey(e.key);
+      send(data);
     };
 
     window.addEventListener("keyup", handler);
@@ -85,7 +68,11 @@ export default function Keyboard() {
         {"qwertyuiop".split("").map(letterMap)}
       </div>
       <div className="Keyboard-col">{"asdfghjkl".split("").map(letterMap)}</div>
-      <div className="Keyboard-col">{"~zxcvbnm_".split("").map(letterMap)}</div>
+      <div className="Keyboard-col">
+        <Key label="Enter" />
+        {"zxcvbnm".split("").map(letterMap)}
+        <Key label="Backspace" value="(X)" />
+      </div>
     </div>
   );
 }
