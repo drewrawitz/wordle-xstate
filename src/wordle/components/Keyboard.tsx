@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classnames from "classnames";
 import { letterStatus } from "../wordle.utils";
 import { useWordle } from "../wordle.hooks";
@@ -56,6 +56,28 @@ const Key: React.FC<KeyProps> = ({ label }) => {
 
 export default function Keyboard() {
   const letterMap = (key: string) => <Key key={key} label={key} />;
+  const { send } = useWordle();
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Backspace") {
+        send({ type: "guess.backspace" });
+      } else if (e.key === "Enter") {
+        send("guess.submit");
+      } else {
+        send({
+          type: "guess.key",
+          key: e.key.toUpperCase(),
+        });
+      }
+    };
+
+    window.addEventListener("keyup", handler);
+
+    return () => {
+      window.removeEventListener("keyup", handler);
+    };
+  }, []);
 
   return (
     <div className="Keyboard-wrapper">
