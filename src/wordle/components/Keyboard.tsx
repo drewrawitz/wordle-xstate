@@ -60,6 +60,7 @@ export default function Keyboard() {
     return () => {
       window.removeEventListener("keyup", handler);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
