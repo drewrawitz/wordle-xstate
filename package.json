@@ -1,6 +1,14 @@
 {
-  "name": "wordle-ts",
-  "version": "0.1.0",
+  "name": "wordle-xstate",
+  "version": "1.0.0",
+  "author": {
+    "name": "Drew Rawitz",
+    "email": "email@drewrawitz.com",
+    "url": "https://github.com/drewrawitz"
+  },
+  "repository": {
+    "url": "https://github.com/drewrawitz/wordle-xstate"
+  },
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
