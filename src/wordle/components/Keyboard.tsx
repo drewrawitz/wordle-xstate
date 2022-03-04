@@ -4,8 +4,8 @@ import { letterStatus } from "../wordle.utils";
 import { useWordle } from "../wordle.hooks";
 
 interface KeyProps {
-  label: string;
-  value?: string;
+  label?: string;
+  value: string;
 }
 
 const sendKey = (code: string) => {
@@ -23,9 +23,9 @@ const sendKey = (code: string) => {
 
 const Key: React.FC<KeyProps> = ({ label, value }) => {
   const { state, send } = useWordle();
-  const letter = value || label;
   const { guesses, answer } = state.context;
-  const status = letterStatus(letter, answer, guesses);
+  const status = letterStatus(value, answer, guesses);
+  const letter = label || value;
 
   const onClick = (letter: string) => {
     const data = sendKey(letter);
@@ -35,7 +35,7 @@ const Key: React.FC<KeyProps> = ({ label, value }) => {
   return (
     <button
       type="button"
-      onClick={() => onClick(label)}
+      onClick={() => onClick(value)}
       className={classnames("Keyboard-key", {
         [`Keyboard-key--${status}`]: status !== "unplayed",
       })}
@@ -46,7 +46,7 @@ const Key: React.FC<KeyProps> = ({ label, value }) => {
 };
 
 export default function Keyboard() {
-  const letterMap = (key: string) => <Key key={key} label={key} />;
+  const letterMap = (key: string) => <Key key={key} value={key} />;
   const { send } = useWordle();
 
   useEffect(() => {
@@ -69,9 +69,9 @@ export default function Keyboard() {
       </div>
       <div className="Keyboard-col">{"asdfghjkl".split("").map(letterMap)}</div>
       <div className="Keyboard-col">
-        <Key label="Enter" />
+        <Key value="Enter" />
         {"zxcvbnm".split("").map(letterMap)}
-        <Key label="Backspace" value="(X)" />
+        <Key value="Backspace" label="(X)" />
       </div>
     </div>
   );
