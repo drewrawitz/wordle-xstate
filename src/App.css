@@ -69,6 +69,7 @@
   justify-content: center;
   cursor: pointer;
   user-select: none;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .Row-tile--correct,
